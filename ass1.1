@@ -1,0 +1,55 @@
+#!/bin/bash
+
+#rows(){
+
+while read myLine
+do
+sum=0
+count=0
+average=0
+
+	#sort the line needed to calc median
+	#translate whitespace to new lines
+	row=$( echo $myLine | tr " " "\n" | sort -g )
+
+	#find sum of the row and count number of values
+	for i in $row
+	do
+	   num=$i
+           count=$(expr $count + 1) #increment count
+	   sum=$(expr $sum + $num) #cur sum plus cur num
+	done
+	
+	#find the middle value in the row by dividing count by 2
+	midNum=$(expr $count / 2 + 1 )
+	x=1 
+	
+	#y loops through values in row until it holds the value of the middle number 
+	#in the row. then the value is put in median variable
+	for y in $row
+	do
+	   medValue=$y
+	   if [ $x -le $midNum ]
+	   then
+		median=$medValue
+		x=$[ $x + 1 ]
+	   fi
+	done
+
+	if [ $count -eq 0 ]
+        then
+            average=""
+        else
+            average=$( echo "scale=2;  $sum / $count" | bc )
+            average=$( echo "($average + .5) / 1" | bc )
+        fi
+
+	#done < $1
+
+echo "total count: $count"
+echo "total sum: $sum"
+echo "average: $average"
+echo -e "sorted\n$row"
+echo "median: $median" 
+done < $1
+#}
